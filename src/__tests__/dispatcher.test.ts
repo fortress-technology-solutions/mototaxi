@@ -1,5 +1,3 @@
-import { getCommandHandlers } from './command-handlers';
-
 describe('Command Dispatcher', () => {
     describe('when dispatching a single command', () => {
 
