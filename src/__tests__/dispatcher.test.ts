@@ -17,6 +17,7 @@ describe('Command Dispatcher', () => {
                 getCommandHandlers: () => [ matchingHandler ]
             }));
 
+            jest.resetModules();
             const dispatch = require('../index').dispatch;
 
             it('should dispatch the command using the matching handler', async () => {
@@ -34,10 +35,11 @@ describe('Command Dispatcher', () => {
                 }
             };
 
-            jest.mock('../command-handlers', () => ({
+            jest.setMock('../command-handlers', {
                 getCommandHandlers: () => [ matchingHandler, anotherMatchingHandler ]
-            }));
+            });
 
+            jest.resetModules();
             const dispatch = require('../index').dispatch;
 
             it('should dispatch the command using all matching handlers', async () => {
