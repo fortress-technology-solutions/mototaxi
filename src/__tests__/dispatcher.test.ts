@@ -1,18 +1,49 @@
-import { dispatch } from '..';
+import { getCommandHandlers } from './command-handlers';
 
-test('Command Dispatcher', async () => {
-    const matchingHandler = {
-        type: 'killMickey',
-        handle: (command) => {
-            return 'dead';
-        }
-    };
+describe('Command Dispatcher', () => {
+    describe('when dispatching a single command', () => {
 
-    const command = { type: 'killMickey', weapon: 'jackhammer'};
+        const matchingHandler = {
+            type: 'killMickey',
+            handle: (command) => {
+                return 'dead';
+            }
+        };
 
-    const module = require('../command-handlers');
-    module.getCommandHandlers = jest.fn(() => [ matchingHandler ]);
+        const command = { type: 'killMickey', weapon: 'jackhammer'};
 
-    const result = await dispatch(command);
-    expect(result).toEqual(['dead']);
+        describe('with one matching handler', () => {
+            jest.mock('../command-handlers', () => ({
+                getCommandHandlers: () => [ matchingHandler ]
+            }));
+
+            const dispatch = require('../index').dispatch;
+
+            it('should dispatch the command using the matching handler', async () => {
+                const result = await dispatch(command);
+                expect(result).toEqual(['dead']);
+            });
+        });
+
+        describe('with multiple matching handlers', () => {
+
+            const anotherMatchingHandler = {
+                type: 'killMickey',
+                handle: (command) => {
+                    return 'all the way';
+                }
+            };
+
+            jest.mock('../command-handlers', () => ({
+                getCommandHandlers: () => [ matchingHandler, anotherMatchingHandler ]
+            }));
+
+            const dispatch = require('../index').dispatch;
+
+            it('should dispatch the command using all matching handlers', async () => {
+                const result = await dispatch(command);
+                expect(result).toEqual(['dead', 'all the way']);
+            });
+        });
+    });
 });
