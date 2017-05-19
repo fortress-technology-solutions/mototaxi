@@ -1,7 +1,7 @@
 language: node_js
 sudo: false
 node_js:
-  - stable
+- stable
 before_script:
 - npm install -g gulp
 script:
@@ -12,17 +12,17 @@ deploy:
   provider: npm
   skip_cleanup: true
   email: developers@acklenavenue.com
-  api_key:
-    secure: yirfYMUCRpg9biJsdbhOuwf7kFcP0aYnQorM8cyeddXQx6LOprRxtlsGtTfwrp29KU2SLk+Ss4WeXDwihbBqlAI21ehfEDzywY07rSAidFK2gmz9+qdM2BNsb1zy96X1rU5Na9MDMgL9IiNe4fyKfztFXkh3l9SAgJ8Q1uwtV2GdcFWjOloiefUU5WfFhtchP/n1NS65p4EKJLSACxn3+aU4sSMKtg9JuBADqKuxlE3S2BAXjtULfTInSwJ6iqNyJhPZgQPD/ffDIFyLyVACdnxy5NUtd4yOnKLLLPikhEv7eASU7fwxtrfjF1EczuzjnvGmGKuu7h2HEOC/eQ0WyJeLEOrUdDWLepliWYbKmbLzkji3z8+bmiFZcrq1rQyHwBBn6xUMl3ZcEPZnmDVhPrceFKJx5ggnsXsbxrEar+nfo9M58C83Suo6XlJi7XgQVgGXhuVZbDPkrQuZ8nliEj7yGLRrb99gR5AuF8yPdqgP6XLGKuxZ4GbsQAkla504ZKYoBLir24zc37ZSKtAhw1onYuFF8Ak9zpac1csmuI9OFGMD3CZtay4FzcTv5VV/h2BcZ6KKj4qPuLq6LcxWG1fUzX/46fV0ndldiC/S66NbVId3QbIZzmqxZ30M5080yuHzhxy0OIk4BvwdjcVZUS4KRciVtjiBc9rC7/PjpFg=
   on:
     tags: false
     repo: AcklenAvenue/mototaxi
     branch: master
+  api_key:
+    secure: s+87iqyZcyKfgLruSDCfrP4tHBQ0dh1oOjbPZwhfkMAx2AHI3KuzZ09Gd3Qr2Y5ZkbT8NKHM8hKQdqeH9ulHB3Zb7ddXdcA8Jw218BgKG4EO1C24D5et+6NYt2bnKLOz/dX19o9+VYSflptklbYVLvnLTOA+hCO5S43aYkAVTLyi3RNrSroYJiCVMbugmS2eK2SqzzFT1pxlJ8uBD09iZhgEKAx9eoYzQgn0WoCKldClNRKj7nfvQk9EhN8kWVI0RWOZC+TDKviNyEmFshtpeqL9h9J1zzzryR4r+o2FpjSJL4SB+yiuP0wPKrx9DIMm5hBGYs7kMbEMLEZO8oaB6NstzTNsEgZ5+9U0r96+qC3faNtJj9mkhpwNO25S5ZLZh/zEbU+VktIw41Vs8BSksaGsdNxBG+7eIjdFGo7I2PbGTLyS3MX91++tRPRd/RCEzfwk4/9VBQLwgC93fIOne0TkjrEe+qjgc4RLqhXSTD4f8Z6C0cOBlkAGO49Cy4F6FcAn3O3p5xoLilhHJX52+O2kjumzT9BD5nWSE3F9O1c9jJrBU95GRKZzXMeo3HIhN+4O9x16axCo99u24zxU5XWRUJzuDBiOBaAEmq78bz9NBuuU1uICfH0IuGfXcPQu+5MyuM6Vrgrnlk36O++xfexCXUSrAM+3xTuimIWFg5Q=
 cache:
   directories:
-    - node_modules
+  - node_modules
 notifications:
   slack: acklen:vUEWGNCb3ZnIbAt0JZJDYJuD
 after_success:
-  - npm i -g coveralls
-  - cat coverage/lcov.info | coveralls
+- npm i -g coveralls
+- cat coverage/lcov.info | coveralls
