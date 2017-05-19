@@ -1,10 +1,3 @@
-# Mototaxi
-
-Installation:
-`npm install --save mototaxi`
-
-Usage:
-```
 const Dispatcher = require('../lib').SynchronousCommandDispatcher;
 
 //We should have some command handlers...
@@ -51,4 +44,3 @@ const dispatcher = new Dispatcher(commandHandlers);
 dispatcher.dispatch({ type: 'solo' });
 dispatcher.dispatch({ type: 'harmony', song: 'Free Bird' });
 dispatcher.dispatch({ type: 'solo' });
-```
