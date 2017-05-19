@@ -25,11 +25,13 @@ module.exports = {
     '**/?(*.)(spec|test).{t,j}s?(x)'
   ],
   testPathIgnorePatterns: [
-    '<rootDir>/(node_modules|lib|es|dist)'
+    '<rootDir>/(node_modules|lib|es|dist)',
   ],
   collectCoverageFrom: [
     'src/**/*.{t,j}s?(x)',
     '!src/**/*.d.ts',
+    '!src/**/{I}*.ts',
+    '!src/index.ts',
   ],
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
   mapCoverage: true,

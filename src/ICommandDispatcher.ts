@@ -1,5 +1,5 @@
-import { ICommand } from "./ICommand";
+import { ICommand } from './ICommand';
 
 export interface ICommandDispatcher {
-    dispatch(command: ICommand): Promise;
+    dispatch(command: ICommand): Promise<any>;
 }

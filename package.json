@@ -1,6 +1,6 @@
 {
   "name": "mototaxi",
-  "version": "0.1.0",
+  "version": "1.1.1",
   "description": "A support library for commands and handlers in existing or 'could be' CQRS systems.",
   "author": "Byron Sommardahl <byron@acklenavenue.com>",
   "license": "MIT",
@@ -44,6 +44,7 @@
   "devDependencies": {
     "@types/jest": "^19.2.2",
     "dts-bundle": "^0.7.2",
+    "gulp-bump": "^2.7.0",
     "jest": "^20.0.0",
     "jest-environment-node-debug": "^2.0.0",
     "pascal-case": "^2.0.1",
