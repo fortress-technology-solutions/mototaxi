@@ -11,8 +11,8 @@ export class SynchronousCommandDispatcher implements ICommandDispatcher {
     return await this.commandHandlers
       .filter((h) => {
         return h.type === command.type;
-      }).map(h => {
-        return h.handle(command);
+      }).forEach(h => {
+        h.handle(command);
       });
   }
 }

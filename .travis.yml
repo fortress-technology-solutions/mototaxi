@@ -1,11 +1,29 @@
 language: node_js
+sudo: false
 node_js:
   - lts/argon
   - lts/boron
   - stable
+before_script:
+- npm install -g gulp
+script:
+- gulp bump
+- gulp
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: developers@acklenavenue.com
+  api_key:
+    secure: yirfYMUCRpg9biJsdbhOuwf7kFcP0aYnQorM8cyeddXQx6LOprRxtlsGtTfwrp29KU2SLk+Ss4WeXDwihbBqlAI21ehfEDzywY07rSAidFK2gmz9+qdM2BNsb1zy96X1rU5Na9MDMgL9IiNe4fyKfztFXkh3l9SAgJ8Q1uwtV2GdcFWjOloiefUU5WfFhtchP/n1NS65p4EKJLSACxn3+aU4sSMKtg9JuBADqKuxlE3S2BAXjtULfTInSwJ6iqNyJhPZgQPD/ffDIFyLyVACdnxy5NUtd4yOnKLLLPikhEv7eASU7fwxtrfjF1EczuzjnvGmGKuu7h2HEOC/eQ0WyJeLEOrUdDWLepliWYbKmbLzkji3z8+bmiFZcrq1rQyHwBBn6xUMl3ZcEPZnmDVhPrceFKJx5ggnsXsbxrEar+nfo9M58C83Suo6XlJi7XgQVgGXhuVZbDPkrQuZ8nliEj7yGLRrb99gR5AuF8yPdqgP6XLGKuxZ4GbsQAkla504ZKYoBLir24zc37ZSKtAhw1onYuFF8Ak9zpac1csmuI9OFGMD3CZtay4FzcTv5VV/h2BcZ6KKj4qPuLq6LcxWG1fUzX/46fV0ndldiC/S66NbVId3QbIZzmqxZ30M5080yuHzhxy0OIk4BvwdjcVZUS4KRciVtjiBc9rC7/PjpFg=
+  on:
+    tags: false
+    repo: AcklenAvenue/pepino-lib
+    branch: develop
 cache:
   directories:
     - node_modules
+notifications:
+  slack: acklen:vUEWGNCb3ZnIbAt0JZJDYJuD
 after_success:
   - npm i -g coveralls
   - cat coverage/lcov.info | coveralls

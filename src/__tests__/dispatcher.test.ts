@@ -5,9 +5,7 @@ describe('Synchronous Command Dispatcher', () => {
 
         const matchingHandler = {
             type: 'killMickey',
-            handle: (command) => {
-                return 'dead';
-            }
+            handle: jest.fn()
         };
 
         const command = { type: 'killMickey', weapon: 'jackhammer'};
@@ -15,8 +13,9 @@ describe('Synchronous Command Dispatcher', () => {
         describe('and only one handler which is a match', () => {
             var dispatcher = new SynchronousCommandDispatcher([ matchingHandler ]);
             it('should dispatch the command using the matching handler', async () => {
-                const result = await dispatcher.dispatch(command);
-                expect(result).toEqual(['dead']);
+                jest.clearAllMocks();
+                await dispatcher.dispatch(command);
+                expect(matchingHandler.handle.mock.calls.length).toEqual(1);
             });
         });
 
@@ -25,22 +24,26 @@ describe('Synchronous Command Dispatcher', () => {
             var dispatcher = new SynchronousCommandDispatcher([ matchingHandler, matchingHandler ]);
 
             it('should dispatch the command using all matching handlers', async () => {
-                const result = await dispatcher.dispatch(command);
-                expect(result).toEqual(['dead', 'dead']);
+                jest.resetAllMocks();
+                await dispatcher.dispatch(command);
+                expect(matchingHandler.handle.mock.calls.length).toEqual(2);
             });
         });
 
         describe('and some handlers are matches', () => {
 
             const nonMatchingHandler = {
-                type: 'somethingElse'
+                type: 'somethingElse',
+                handle: jest.fn()
             };
 
             const dispatcher = new SynchronousCommandDispatcher([ matchingHandler, nonMatchingHandler, matchingHandler ]);
 
             it('should dispatch the command using all matching handlers', async () => {
-                const result = await dispatcher.dispatch(command);
-                expect(result).toEqual(['dead', 'dead']);
+                jest.resetAllMocks();
+                await dispatcher.dispatch(command);
+                expect(matchingHandler.handle.mock.calls.length).toEqual(2);
+                expect(nonMatchingHandler.handle.mock.calls.length).toEqual(0);
             });
         });
     });
