@@ -1,4 +1,6 @@
-describe('Command Dispatcher', () => {
+import { SynchronousCommandDispatcher } from '../dispatcher';
+
+describe('Synchronous Command Dispatcher', () => {
     describe('when dispatching a single command', () => {
 
         const matchingHandler = {
@@ -10,39 +12,35 @@ describe('Command Dispatcher', () => {
 
         const command = { type: 'killMickey', weapon: 'jackhammer'};
 
-        describe('with one matching handler', () => {
-            jest.mock('../command-handlers', () => ({
-                getCommandHandlers: () => [ matchingHandler ]
-            }));
-
-            jest.resetModules();
-            const dispatch = require('../index').dispatch;
-
+        describe('and only one handler which is a match', () => {
+            var dispatcher = new SynchronousCommandDispatcher([ matchingHandler ]);
             it('should dispatch the command using the matching handler', async () => {
-                const result = await dispatch(command);
+                const result = await dispatcher.dispatch(command);
                 expect(result).toEqual(['dead']);
             });
         });
 
-        describe('with multiple matching handlers', () => {
+        describe('and all handlers are matches', () => {
 
-            const anotherMatchingHandler = {
-                type: 'killMickey',
-                handle: (command) => {
-                    return 'all the way';
-                }
-            };
-
-            jest.setMock('../command-handlers', {
-                getCommandHandlers: () => [ matchingHandler, anotherMatchingHandler ]
-            });
-
-            jest.resetModules();
-            const dispatch = require('../index').dispatch;
+            var dispatcher = new SynchronousCommandDispatcher([ matchingHandler, matchingHandler ]);
 
             it('should dispatch the command using all matching handlers', async () => {
-                const result = await dispatch(command);
-                expect(result).toEqual(['dead', 'all the way']);
+                const result = await dispatcher.dispatch(command);
+                expect(result).toEqual(['dead', 'dead']);
+            });
+        });
+
+        describe('and some handlers are matches', () => {
+
+            const nonMatchingHandler = {
+                type: 'somethingElse'
+            };
+
+            const dispatcher = new SynchronousCommandDispatcher([ matchingHandler, nonMatchingHandler, matchingHandler ]);
+
+            it('should dispatch the command using all matching handlers', async () => {
+                const result = await dispatcher.dispatch(command);
+                expect(result).toEqual(['dead', 'dead']);
             });
         });
     });
