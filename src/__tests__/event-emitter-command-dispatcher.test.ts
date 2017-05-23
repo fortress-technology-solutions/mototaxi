@@ -1,6 +1,6 @@
-import { SynchronousCommandDispatcher } from '../SynchronousCommandDispatcher';
+import EventEmitterCommandDispatcher from '../dispatchers/EventEmitterCommandDispatcher';
 
-describe('Synchronous Command Dispatcher', () => {
+describe('Event Emitter Command Dispatcher', () => {
     describe('when dispatching a single command', () => {
 
         const matchingHandler = {
@@ -11,7 +11,7 @@ describe('Synchronous Command Dispatcher', () => {
         const command = { type: 'killMickey', weapon: 'jackhammer'};
 
         describe('and only one handler which is a match', () => {
-            const dispatcher = new SynchronousCommandDispatcher([ matchingHandler ]);
+            const dispatcher = new EventEmitterCommandDispatcher([ matchingHandler ]);
             it('should dispatch the command using the matching handler', async () => {
                 jest.clearAllMocks();
                 await dispatcher.dispatch(command);
@@ -21,7 +21,7 @@ describe('Synchronous Command Dispatcher', () => {
 
         describe('and all handlers are matches', () => {
 
-            const dispatcher = new SynchronousCommandDispatcher([ matchingHandler, matchingHandler ]);
+            const dispatcher = new EventEmitterCommandDispatcher([ matchingHandler, matchingHandler ]);
 
             it('should dispatch the command using all matching handlers', async () => {
                 jest.resetAllMocks();
@@ -37,7 +37,7 @@ describe('Synchronous Command Dispatcher', () => {
                 handle: jest.fn(),
             };
 
-            const dispatcher = new SynchronousCommandDispatcher(
+            const dispatcher = new EventEmitterCommandDispatcher(
                 [ matchingHandler, nonMatchingHandler, matchingHandler ]);
 
             it('should dispatch the command using all matching handlers', async () => {

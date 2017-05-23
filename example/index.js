@@ -41,6 +41,23 @@ const commandHandlers = [ sopranoHandler, altoHandler, tenorHandler, bassHandler
 const dispatcher = new Dispatcher(commandHandlers);
 
 //Now, we can dispatch commands without caring what handlers might or might not handle them!
-dispatcher.dispatch({ type: 'solo' });
 dispatcher.dispatch({ type: 'harmony', song: 'Free Bird' });
 dispatcher.dispatch({ type: 'solo' });
+
+//We can also subscribe to domainn events that are thrown as a result
+const observable = dispatcher.dispatch({ type: 'solo' });
+observable.subscribe('songFinished', (event) => {
+    console.log('songFinished', event);
+});
+observable.subscribe('pageTurned', (event) => {
+    console.log('pageTurned', event);
+});
+
+//and we can chain all that to make it prettier
+dispatcher.dispatch({ type: 'solo' })
+    .subscribe('songFinished', (event) => {
+        console.log('songFinished', event);
+    })
+    .subscribe('pageTurned', (event) => {
+        console.log('pageTurned', event);
+    });
