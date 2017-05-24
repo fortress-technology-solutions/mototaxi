@@ -1,7 +1,8 @@
-import SynchronousCommandDispatcher from './dispatchers/SynchronousCommandDispatcher';
+import { CommandDispatcher } from './CommandDispatcher';
+import { DefaultEventEmitter } from './eventEmitters/DefaultEventEmitter';
 
 const getDispatcher = () => {
-    const dispatcher = new SynchronousCommandDispatcher([]);
+    const dispatcher = new CommandDispatcher([], new DefaultEventEmitter(), new DefaultEventEmitter());
     return dispatcher;
 };
 

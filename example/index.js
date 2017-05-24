@@ -53,11 +53,33 @@ observable.subscribe('pageTurned', (event) => {
     console.log('pageTurned', event);
 });
 
-//and we can chain all that to make it prettier
-dispatcher.dispatch({ type: 'solo' })
-    .subscribe('songFinished', (event) => {
-        console.log('songFinished', event);
-    })
-    .subscribe('pageTurned', (event) => {
-        console.log('pageTurned', event);
-    });
+
+//post received
+//request sent to SQS (queue)
+//
+//in another server, listening to the queue for new items
+//process request
+
+//traditional: route -> handler -> (validator -> service) -> response
+//lambda-based: route -> handler -> Lambda -> (validator -> service) -> response
+//queue-based: (route -> handler -> validator -> queue -> reply(x)) -> (listener -> service -> response[!])
+//ex: queue.send({type: 'createProduct', name: 'candy bar'})
+//ex: listener.subscribe('createProduct'. (event) => {
+//    service.createProduct(event);
+//})
+
+//1. How can we provide a good dev experience?
+//2. How can my team easily switch to a queue based architecture without disrupting existing code?
+//3. How can we stay DRY? (not have code copied in multiple locations)
+
+route.post('/product', (req, res) => {
+
+    dispatcher
+        .dispatch({ type: 'createProduct', payload: { name: req.body.name, price: req.body.price }})
+        .subscribe('productCreated', (event) => {
+            product = event.product;
+            res.send({
+                product,
+            });
+        });
+});

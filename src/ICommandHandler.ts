@@ -1,5 +1,5 @@
 import { ICommand } from './ICommand';
-import { IEvent } from '../IEvent';
+import { IEvent } from './IEvent';
 
 export interface ICommandHandler {
     type: string;
