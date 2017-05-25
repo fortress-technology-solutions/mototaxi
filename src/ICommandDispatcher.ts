@@ -1,6 +1,7 @@
+import { IEvent } from './IEvent';
 import { ICommand } from './ICommand';
-import { ISubject } from './ISubject';
+import { Observable } from 'rxjs/Observable';
 
 export interface ICommandDispatcher {
-    dispatch(command: ICommand): ISubject;
+    dispatch(command: ICommand): Observable<IEvent>;
 }

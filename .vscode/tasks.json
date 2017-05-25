@@ -9,7 +9,7 @@
     "tasks": [
         {
             "taskName": "build",
-            "args": ["run", "typecheck", "lint"]
+            "args": ["run", "build"]
         },
         {
             "taskName": "update",

@@ -1,6 +1,4 @@
-import { IEvent } from './IEvent';
-
 export interface IEventEmitter {
-    on(event: string, listener: (event: IEvent) => void);
+    on(event: string, listener: (event: any) => void);
     emit(event: string, ...args: any[]): void;
 }
