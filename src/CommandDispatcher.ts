@@ -2,7 +2,7 @@ import { ICommand } from './ICommand';
 import { IEvent } from './IEvent';
 import { ICommandHandler } from './ICommandHandler';
 import { ICommandDispatcher } from './ICommandDispatcher';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 
 export class CommandDispatcher implements ICommandDispatcher {
 

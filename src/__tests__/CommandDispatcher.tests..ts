@@ -10,11 +10,13 @@ describe('The Command Dispatcher', () => {
             handle: (command) => { return domainEvent },
         };
         const dispatcher = new CommandDispatcher([ fakeHandler ]);
-        it('should register domain events that come from command handlers', () => {
-            const obs = dispatcher.dispatch(command);
-            obs.subscribe((e) => {
-                expect(e).toEqual(domainEvent);
-            });
+        const obs = dispatcher.dispatch(command);
+        it('should allow me to subscribe to domain events that come from command handlers', () => {
+            obs
+                .filter((x) => x.type===domainEvent.type)
+                .subscribe((e) => {
+                    expect(e).toEqual(domainEvent);
+                });
         });
     });
     describe('when dispatching a single command with one handler', () => {
