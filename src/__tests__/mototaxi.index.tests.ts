@@ -1,5 +1,5 @@
 // tslint:disable
-import mototaxi from '../index';
+import * as mototaxi from '../index';
 import { CommandDispatcher } from '../CommandDispatcher';
 
 describe('Getting a Dispatcher', () => {

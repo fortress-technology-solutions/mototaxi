@@ -13,8 +13,8 @@ describe('The Command Dispatcher', () => {
         it('should register domain events that come from command handlers', () => {
             const obs = dispatcher.dispatch(command);
             obs.subscribe((e) => {
-                expect(e).toEqual(domainEvent);
-            });
+                   expect(e).toEqual(domainEvent);
+               });
         });
     });
     describe('when dispatching a single command with one handler', () => {

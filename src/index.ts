@@ -6,6 +6,6 @@ const getDispatcher = (args?: IMotoTaxiConfig) => {
     return new CommandDispatcher(args.commandHandlers || []);
 };
 
-export default {
+export {
     getDispatcher,
 };
