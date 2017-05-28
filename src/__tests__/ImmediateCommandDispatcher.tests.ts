@@ -1,5 +1,5 @@
 // tslint:disable
-import { CommandDispatcher } from '../CommandDispatcher';
+import { ImmediateCommandDispatcher } from '../dispatchers/ImmediateCommandDispatcher';
 
 describe('The Command Dispatcher', () => {
     describe('when setting up a command dispatcher for the first time', () => {
@@ -9,7 +9,7 @@ describe('The Command Dispatcher', () => {
             type: command.type,
             handle: (command) => { return domainEvent },
         };
-        const dispatcher = new CommandDispatcher([ fakeHandler ]);
+        const dispatcher = new ImmediateCommandDispatcher([ fakeHandler ]);
         it('should register domain events that come from command handlers', () => {
             const obs = dispatcher.dispatch(command);
             obs.subscribe((e) => {
@@ -26,7 +26,7 @@ describe('The Command Dispatcher', () => {
                 type: command.type,
                 handle: jest.fn().mockReturnValue(domainEvent),
             };
-            const dispatcher = new CommandDispatcher([ matchingHandler ]);
+            const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
             dispatcher.dispatch(command);
             it('should handle the command', () => {
                 expect(matchingHandler.handle.mock.calls.length).toEqual(1);
@@ -37,7 +37,7 @@ describe('The Command Dispatcher', () => {
                 type: command.type,
                 handle: jest.fn().mockReturnValue(domainEvent),
             };
-            const dispatcher = new CommandDispatcher([ matchingHandler ]);
+            const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
             const observable = dispatcher.dispatch(command);
             it('should handle the command', () => {
                 expect(matchingHandler.handle.mock.calls.length).toEqual(1);
@@ -53,7 +53,7 @@ describe('The Command Dispatcher', () => {
                 type: command.type,
                 handle: jest.fn().mockReturnValue(domainEvent),
             };
-            const dispatcher = new CommandDispatcher([ matchingHandler ]);
+            const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
             const obs = dispatcher.dispatch(command);
             obs.subscribe();
             obs.subscribe();
@@ -76,7 +76,7 @@ describe('The Command Dispatcher', () => {
                 type: command.type,
                 handle: jest.fn().mockReturnValue(domainEvent),
             };
-            const dispatcher = new CommandDispatcher([ handler1, handler2 ]);
+            const dispatcher = new ImmediateCommandDispatcher([ handler1, handler2 ]);
             dispatcher.dispatch(command);
             it('should handle the command using all handlers', () => {
                 expect(handler1.handle.mock.calls.length).toEqual(1);
@@ -92,7 +92,7 @@ describe('The Command Dispatcher', () => {
                 type: command.type,
                 handle: jest.fn().mockReturnValue(domainEvent),
             };
-            const dispatcher = new CommandDispatcher([ handler1, handler2 ]);
+            const dispatcher = new ImmediateCommandDispatcher([ handler1, handler2 ]);
             const observable = dispatcher.dispatch(command);
             it('should handle the command', () => {
                 expect(handler1.handle.mock.calls.length).toEqual(1);

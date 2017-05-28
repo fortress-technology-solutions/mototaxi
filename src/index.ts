@@ -1,9 +1,9 @@
-import { CommandDispatcher } from './CommandDispatcher';
+import { ImmediateCommandDispatcher } from './dispatchers/ImmediateCommandDispatcher';
 import { IMotoTaxiConfig } from './IMotoTaxiConfig';
 
 const getDispatcher = (args?: IMotoTaxiConfig) => {
     args = args || {};
-    return new CommandDispatcher(args.commandHandlers || []);
+    return new ImmediateCommandDispatcher(args.commandHandlers || []);
 };
 
 export {

@@ -1,12 +1,12 @@
 // tslint:disable
 import * as mototaxi from '../index';
-import { CommandDispatcher } from '../CommandDispatcher';
+import { ImmediateCommandDispatcher } from '../dispatchers/ImmediateCommandDispatcher';
 
 describe('Getting a Dispatcher', () => {
     describe('with no config', () => {
         const dispatcher = mototaxi.getDispatcher();
         it('should return the dispatcher', () => {
-            expect((dispatcher instanceof CommandDispatcher)).toBeTruthy();
+            expect((dispatcher instanceof ImmediateCommandDispatcher)).toBeTruthy();
         });
     });
     describe('with full config', () => {
@@ -15,7 +15,7 @@ describe('Getting a Dispatcher', () => {
         };
         const dispatcher = mototaxi.getDispatcher(config);
         it('should return the dispatcher', () => {
-            expect((dispatcher instanceof CommandDispatcher)).toBeTruthy();
+            expect((dispatcher instanceof ImmediateCommandDispatcher)).toBeTruthy();
         });
     });
     describe('with no command handlers', () => {
@@ -23,7 +23,7 @@ describe('Getting a Dispatcher', () => {
         };
         const dispatcher = mototaxi.getDispatcher(config);
         it('should return the dispatcher', () => {
-            expect((dispatcher instanceof CommandDispatcher)).toBeTruthy();
+            expect((dispatcher instanceof ImmediateCommandDispatcher)).toBeTruthy();
         });
     });
 });
