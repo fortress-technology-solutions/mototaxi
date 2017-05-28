@@ -55,14 +55,17 @@ const dispatcher = mototaxi.getDispatcher(commandHandlers);
 //Now, we can dispatch commands without caring what handlers might or might not handle them!
 dispatcher
     .dispatch({ type: 'solo' })
-    .subscribe('songFinished', (s) => { console.log(s.name); });
+    .filter((e) => e.type==='songFinished')
+    .subscribe((s) => { console.log(s.name); });
 
 dispatcher
     .dispatch({ type: 'harmony', song: 'Free Bird' })
-    .subscribe('songFinished', (s) => { console.log(s.name); });
+    .filter((e) => e.type==='songFinished')
+    .subscribe((s) => { console.log(s.name); });
 
 dispatcher
     .dispatch({ type: 'solo' })
-    .subscribe('songFinished', (s) => { console.log(s.name); });
+    .filter((e) => e.type==='songFinished')
+    .subscribe((s) => { console.log(s.name); });
 
 ```
