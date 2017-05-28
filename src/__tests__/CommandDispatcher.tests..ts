@@ -32,7 +32,7 @@ describe('The Command Dispatcher', () => {
                 expect(matchingHandler.handle.mock.calls.length).toEqual(1);
             });
         });
-        describe('and subscribing to the domain event', () => {
+        describe('and subscribing to the domain event once', () => {
             const matchingHandler = {
                 type: command.type,
                 handle: jest.fn().mockReturnValue(domainEvent),
@@ -46,6 +46,20 @@ describe('The Command Dispatcher', () => {
                 observable.subscribe((e) => {
                     expect(e).toEqual(domainEvent);
                 });
+            });
+        });
+        describe('and subscribing to the domain event multiple times`', () => {
+            const matchingHandler = {
+                type: command.type,
+                handle: jest.fn().mockReturnValue(domainEvent),
+            };
+            const dispatcher = new CommandDispatcher([ matchingHandler ]);
+            const obs = dispatcher.dispatch(command);
+            obs.subscribe();
+            obs.subscribe();
+                
+            it('should only handle the command once', () => {
+                expect(matchingHandler.handle.mock.calls.length).toEqual(1);
             });
         });
     });

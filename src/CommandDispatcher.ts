@@ -3,6 +3,7 @@ import { IEvent } from './IEvent';
 import { ICommandHandler } from './ICommandHandler';
 import { ICommandDispatcher } from './ICommandDispatcher';
 import { Observable } from 'rxjs/Observable';
+import * as Rx from 'rxjs';
 
 export class CommandDispatcher implements ICommandDispatcher {
 
@@ -10,14 +11,10 @@ export class CommandDispatcher implements ICommandDispatcher {
   }
 
   dispatch(command: ICommand): Observable<IEvent> {
-    const obs = new Observable((observer) => {
-      this.commandHandlers
+    const domainEvents = this.commandHandlers
         .filter((h) => h.type === command.type)
-        .forEach((h) => {
-          observer.next(h.handle(command));
-        });
-    });
-    obs.subscribe();
+        .map((h) => h.handle(command));
+    const obs = Rx.Observable.from(domainEvents);
     return obs;
   }
 }
