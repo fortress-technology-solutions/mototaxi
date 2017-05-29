@@ -17,30 +17,41 @@ describe('The Command Dispatcher', () => {
                });
         });
     });
+    describe('when dispatching a command with a typeless handler', () => {
+        const command = { type: 'killMickey' };
+        const domainEvent = { type: 'mickeyDead' };
+        const matchingHandler = {
+            killMickey: jest.fn().mockReturnValue(domainEvent),
+        };
+            
+        const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
+        dispatcher.dispatch(command);
+        it('should handle the command', () => {
+            expect(matchingHandler.killMickey.mock.calls.length).toEqual(1);
+        });
+    });
     describe('when dispatching a single command with one handler', () => {
         const command = { type: 'killMickey' };
         const domainEvent = { type: 'mickeyDead' };
 
         describe('without subscribing', () => {
             const matchingHandler = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
             dispatcher.dispatch(command);
             it('should handle the command', () => {
-                expect(matchingHandler.handle.mock.calls.length).toEqual(1);
+                expect(matchingHandler[command.type].mock.calls.length).toEqual(1);
             });
         });
         describe('and subscribing to the domain event once', () => {
             const matchingHandler = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
             const observable = dispatcher.dispatch(command);
             it('should handle the command', () => {
-                expect(matchingHandler.handle.mock.calls.length).toEqual(1);
+                expect(matchingHandler[command.type].mock.calls.length).toEqual(1);
             });
             it('should subscribe to the domain event', () => {
                 observable.subscribe((e) => {
@@ -50,8 +61,7 @@ describe('The Command Dispatcher', () => {
         });
         describe('and subscribing to the domain event multiple times`', () => {
             const matchingHandler = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
             const obs = dispatcher.dispatch(command);
@@ -59,7 +69,7 @@ describe('The Command Dispatcher', () => {
             obs.subscribe();
                 
             it('should only handle the command once', () => {
-                expect(matchingHandler.handle.mock.calls.length).toEqual(1);
+                expect(matchingHandler[command.type].mock.calls.length).toEqual(1);
             });
         });
     });
@@ -69,34 +79,30 @@ describe('The Command Dispatcher', () => {
 
         describe('without subscribing', () => {
             const handler1 = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const handler2 = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const dispatcher = new ImmediateCommandDispatcher([ handler1, handler2 ]);
             dispatcher.dispatch(command);
             it('should handle the command using all handlers', () => {
-                expect(handler1.handle.mock.calls.length).toEqual(1);
-                expect(handler2.handle.mock.calls.length).toEqual(1);
+                expect(handler1[command.type].mock.calls.length).toEqual(1);
+                expect(handler2[command.type].mock.calls.length).toEqual(1);
             });
         });
         describe('and subscribing to the domain event', () => {
             const handler1 = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const handler2 = {
-                type: command.type,
-                handle: jest.fn().mockReturnValue(domainEvent),
+                [command.type]: jest.fn().mockReturnValue(domainEvent),
             };
             const dispatcher = new ImmediateCommandDispatcher([ handler1, handler2 ]);
             const observable = dispatcher.dispatch(command);
             it('should handle the command', () => {
-                expect(handler1.handle.mock.calls.length).toEqual(1);
-                expect(handler2.handle.mock.calls.length).toEqual(1);
+                expect(handler1[command.type].mock.calls.length).toEqual(1);
+                expect(handler2[command.type].mock.calls.length).toEqual(1);
             });
             it('should subscribe to the domain event', () => {
                 observable.subscribe((e) => {
