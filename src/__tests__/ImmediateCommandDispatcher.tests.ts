@@ -5,16 +5,16 @@ describe('The Command Dispatcher', () => {
     describe('when setting up a command dispatcher for the first time', () => {
         const domainEvent = { type: 'puppyFlattened' };
         const command = { type: 'stepOnPuppy' };
-        const fakeHandler = {
-            type: command.type,
-            handle: (command) => { return domainEvent },
-        };
+        const fakeHandler = {};
+        fakeHandler[command.type] = (command) => { return domainEvent };
         const dispatcher = new ImmediateCommandDispatcher([ fakeHandler ]);
         it('should register domain events that come from command handlers', () => {
             const obs = dispatcher.dispatch(command);
+            let domainEventFromSubscription = {};
             obs.subscribe((e) => {
-                   expect(e).toEqual(domainEvent);
-               });
+                domainEventFromSubscription = e;
+            });
+            expect(domainEventFromSubscription).toEqual(domainEvent);
         });
     });
     describe('when dispatching a command with a typeless handler', () => {
@@ -23,7 +23,7 @@ describe('The Command Dispatcher', () => {
         const matchingHandler = {
             killMickey: jest.fn().mockReturnValue(domainEvent),
         };
-            
+
         const dispatcher = new ImmediateCommandDispatcher([ matchingHandler ]);
         dispatcher.dispatch(command);
         it('should handle the command', () => {
@@ -67,7 +67,7 @@ describe('The Command Dispatcher', () => {
             const obs = dispatcher.dispatch(command);
             obs.subscribe();
             obs.subscribe();
-                
+
             it('should only handle the command once', () => {
                 expect(matchingHandler[command.type].mock.calls.length).toEqual(1);
             });
