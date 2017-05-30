@@ -21,8 +21,7 @@ module.exports = {
     '.(tsx?)': '<rootDir>/node_modules/ts-jest/preprocessor.js'
   },
   testMatch: [
-    '**/__tests__/**/*.{t,j}s?(x)',
-    '**/?(*.)(spec|test).{t,j}s?(x)'
+    '<rootDir>/src/__tests__/**/*.{t,j}s?(x)',
   ],
   testPathIgnorePatterns: [
     '<rootDir>/(node_modules|lib|es|dist)',
