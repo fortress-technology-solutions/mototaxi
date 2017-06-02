@@ -1,7 +1,7 @@
 // tslint:disable
 import { ImmediateCommandDispatcher } from '../dispatchers/ImmediateCommandDispatcher';
 
-describe('The Command Dispatcher', () => {
+describe('The Immediate Command Dispatcher', () => {
     describe('when setting up a command dispatcher for the first time', () => {
         const domainEvent = { type: 'puppyFlattened' };
         const command = { type: 'stepOnPuppy' };
@@ -9,11 +9,13 @@ describe('The Command Dispatcher', () => {
         fakeHandler[command.type] = (command) => { return domainEvent };
         const dispatcher = new ImmediateCommandDispatcher([ fakeHandler ]);
         it('should register domain events that come from command handlers', () => {
-            const obs = dispatcher.dispatch(command);
+            const observable = dispatcher.dispatch(command);
             let domainEventFromSubscription = {};
-            obs.subscribe((e) => {
-                domainEventFromSubscription = e;
-            });
+            observable
+                .filter((e) => e.type === domainEvent.type)
+                .subscribe((e) => {
+                    domainEventFromSubscription = e;
+                });
             expect(domainEventFromSubscription).toEqual(domainEvent);
         });
     });
@@ -54,9 +56,11 @@ describe('The Command Dispatcher', () => {
                 expect(matchingHandler[command.type].mock.calls.length).toEqual(1);
             });
             it('should subscribe to the domain event', () => {
-                observable.subscribe((e) => {
-                    expect(e).toEqual(domainEvent);
-                });
+                observable
+                    .filter((e) => e === domainEvent)
+                    .subscribe((e) => {
+                        expect(e).toEqual(domainEvent);
+                    });
             });
         });
         describe('and subscribing to the domain event multiple times`', () => {
