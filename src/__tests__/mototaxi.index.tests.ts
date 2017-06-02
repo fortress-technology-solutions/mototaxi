@@ -1,6 +1,7 @@
 // tslint:disable
 import * as mototaxi from '../index';
 import { ImmediateCommandDispatcher } from '../dispatchers/ImmediateCommandDispatcher';
+import { AsyncCommandDispatcher } from '../dispatchers/AsyncCommandDispatcher';
 
 describe('Getting a Dispatcher', () => {
     describe('with no config', () => {
@@ -26,4 +27,19 @@ describe('Getting a Dispatcher', () => {
             expect((dispatcher instanceof ImmediateCommandDispatcher)).toBeTruthy();
         });
     });
+    describe('with sqs config', () => {
+        const config = {
+            sqs: {
+                name: 'name',
+                region: 'region',
+                secret: 'secret',
+                access: 'access'
+            }
+        };
+        const dispatcher = mototaxi.getDispatcher(config);
+        it('should return the dispatcher', () => {
+            expect((dispatcher instanceof AsyncCommandDispatcher)).toBeTruthy();
+        });
+    });
+
 });
