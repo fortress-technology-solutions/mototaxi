@@ -1,17 +1,31 @@
 import { ICommand } from '../ICommand';
-import { IQueuePusher } from '../IQueuePusher';
-import { IEventListener } from '../IEventListener';
-import { ConfigurableCommandDispatcher } from '../dispatchers/ConfigurableCommandDispatcher';
+import { ICommandDispatcher } from '../ICommandDispatcher';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import * as EventEmitter from 'events';
 
-export class AsyncCommandDispatcher extends ConfigurableCommandDispatcher {
+export class AsyncCommandDispatcher implements ICommandDispatcher {
 
-  constructor(queuePusher: IQueuePusher, eventListener: IEventListener) {
-    const handle = (command: ICommand) => {
-      return queuePusher.push(command);
-    };
-    const listen = (command: ICommand) => {
-      return eventListener.listenFor(command);
-    };
-    super(handle, listen);
-  }
+    private stream: Subject<any>;
+    private eventEmitter: EventEmitter;
+
+    constructor(private commandHandlers: any[]) {
+        this.stream = new Subject();
+        this.eventEmitter = new EventEmitter();
+
+        this.commandHandlers
+            .forEach((handler) => {
+                Object.keys(handler).forEach((commandType) => {
+                    this.eventEmitter.on(commandType, (command) => {
+                        const domainEvent = handler[commandType](command);
+                        this.stream.next(domainEvent);
+                    });
+                });
+            });
+    }
+
+    dispatch(command: ICommand): Observable<any> {
+        setTimeout(() => this.eventEmitter.emit(command.type, command), 0);
+        return this.stream;
+    }
 }

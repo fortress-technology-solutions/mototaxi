@@ -1,18 +1,16 @@
 import { ICommand } from '../ICommand';
-import { ConfigurableCommandDispatcher } from '../dispatchers/ConfigurableCommandDispatcher';
-import * as Rx from 'rxjs';
+import { ICommandDispatcher } from '../ICommandDispatcher';
+import { Observable } from 'rxjs/Observable';
 
-export class ImmediateCommandDispatcher extends ConfigurableCommandDispatcher {
+export class ImmediateCommandDispatcher implements ICommandDispatcher {
 
-  constructor(commandHandlers: any[]) {
-    const handle = (command: ICommand) => {
-      return Rx.Observable.from([]);
-    };
-    const listen = (command: ICommand) => {
-      return Rx.Observable.from(commandHandlers
-        .filter((h) => h[command.type])
-        .map((h) => h[command.type](command)));
-    };
-    super(handle, listen);
+  constructor(private commandHandlers: any[]) {
+  }
+
+  dispatch(command: ICommand): Observable<any> {
+    return new Observable((observer) => {
+        this.commandHandlers.filter((h) => h[command.type])
+        .forEach((h) => observer.next(h[command.type](command)));
+    });
   }
 }
