@@ -1,13 +1,13 @@
 // tslint:disable
-import { AsyncCommandDispatcher } from '../dispatchers/AsyncCommandDispatcher';
+import { CommandDispatcher } from '../CommandDispatcher';
 import 'rxjs/add/operator/filter';
 
-describe('The Async Command Dispatcher', () => {
+describe('The Command Dispatcher', () => {
     describe('when dispatching a command', () => {
         const command = { type: 'test' };
         const domainEvent = { type: `tested` };
         const handler = { test: (command) => domainEvent };
-        const dispatcher = new AsyncCommandDispatcher([handler]);
+        const dispatcher = new CommandDispatcher([handler]);
         const observable = dispatcher.dispatch(command);
 
         describe('when subscribing to the dispatched observable', () => {

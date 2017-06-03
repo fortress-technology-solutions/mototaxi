@@ -1,10 +1,10 @@
-import { ICommand } from '../ICommand';
-import { ICommandDispatcher } from '../ICommandDispatcher';
+import { ICommand } from './ICommand';
+import { ICommandDispatcher } from './ICommandDispatcher';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import * as EventEmitter from 'events';
 
-export class AsyncCommandDispatcher implements ICommandDispatcher {
+export class CommandDispatcher implements ICommandDispatcher {
 
     private stream: Subject<any>;
     private eventEmitter: EventEmitter;
