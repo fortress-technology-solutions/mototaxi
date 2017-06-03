@@ -2,16 +2,14 @@ import { ICommand } from './ICommand';
 import { ICommandDispatcher } from './ICommandDispatcher';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import * as EventEmitter from 'events';
+import { IEventEmitter } from './IEventEmitter';
 
 export class CommandDispatcher implements ICommandDispatcher {
 
     private stream: Subject<any>;
-    private eventEmitter: EventEmitter;
 
-    constructor(private commandHandlers: any[]) {
+    constructor(private commandHandlers: any[], private eventEmitter: IEventEmitter) {
         this.stream = new Subject();
-        this.eventEmitter = new EventEmitter();
 
         this.commandHandlers
             .forEach((handler) => {

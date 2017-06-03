@@ -1,13 +1,15 @@
 // tslint:disable
 import { CommandDispatcher } from '../CommandDispatcher';
 import 'rxjs/add/operator/filter';
+import * as EventEmitter from 'events';
 
 describe('The Command Dispatcher', () => {
     describe('when dispatching a command', () => {
         const command = { type: 'test' };
         const domainEvent = { type: `tested` };
         const handler = { test: (command) => domainEvent };
-        const dispatcher = new CommandDispatcher([handler]);
+        const eventEmitter = new EventEmitter();
+        const dispatcher = new CommandDispatcher([handler], eventEmitter);
         const observable = dispatcher.dispatch(command);
 
         describe('when subscribing to the dispatched observable', () => {
