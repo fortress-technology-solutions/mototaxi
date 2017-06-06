@@ -14,9 +14,13 @@ export class CommandDispatcher implements ICommandDispatcher {
 
     dispatch(command: ICommand): Observable<any> {
         this.eventEmitter.on(command.type, (cmd) => {
-            this.commandHandlers.filter((handler) => handler[cmd.type])
-                .map((handler) => handler[cmd.type](cmd))
-                .forEach((domainEvent) => this.stream.next(domainEvent));
+            this.commandHandlers.filter((handler) => {
+                return handler[cmd.type];
+            }).map((handler) => {
+                return handler[cmd.type](cmd);
+            }).forEach((domainEvent) => {
+                this.stream.next(domainEvent);
+            });
         });
         setTimeout(() => this.eventEmitter.emit(command.type, command), 0);
         return this.stream;
