@@ -3,6 +3,7 @@ import { ICommandDispatcher } from './ICommandDispatcher';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { IEventEmitter } from './IEventEmitter';
+import * as Rx from 'rxjs';
 
 export class CommandDispatcher implements ICommandDispatcher {
 
@@ -11,13 +12,17 @@ export class CommandDispatcher implements ICommandDispatcher {
     constructor(private commandHandlers: any[], private eventEmitter: IEventEmitter) {
         this.stream = new Subject();
 
-        this.commandHandlers
-            .forEach((handler) => {
-                Object.keys(handler).forEach((commandType) => {
-                    this.eventEmitter.on(commandType, (command) => {
-                        const domainEvent = handler[commandType](command);
-                        this.stream.next(domainEvent);
-                    });
+        Rx.Observable.from(this.commandHandlers)
+            .map((handler) => {
+                return { keys: Object.keys(handler), handler };
+            })
+            .flatMap(({keys, handler}) => keys.map((commandType) => {
+                    return { commandType, handler};
+            }))
+            .subscribe(({commandType, handler}) => {
+                this.eventEmitter.on(commandType, (command) => {
+                    const domainEvent = handler[commandType](command);
+                    this.stream.next(domainEvent);
                 });
             });
     }
