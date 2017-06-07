@@ -19,12 +19,16 @@ export class AwsEventEmitter implements IEventEmitter {
         });
     }
 
-    on(eventType: string, action: (domainEvent) => any) {
+    addListener(eventType: string, action: (domainEvent) => any) {
         this.queue.pull(this.config.eventQueueName, (domainEvent, done) => {
             this.log(`AwsEventEmitter: domain event received: ${JSON.stringify(domainEvent)}.`);
             action(domainEvent);
             done();
         });
+    }
+
+    removeListener(type: string, listener: any) {
+        return;
     }
 
     private log(message): void {
