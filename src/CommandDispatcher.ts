@@ -14,8 +14,9 @@ export class CommandDispatcher implements ICommandDispatcher {
     }
 
     dispatch(command: ICommand): Observable<any> {
+        const receiptId = `${command.type}-${new Date().getTime()}`;
         this.log(`CommandDispatcher: Listening for ${command.type}...`);
-        this.eventEmitter.on(command.type, (cmd) => {
+        this.eventEmitter.on(receiptId, (cmd) => {
             this.commandHandlers.filter((handler) => {
                 return handler[cmd.type];
             }).map((handler) => {
@@ -28,7 +29,7 @@ export class CommandDispatcher implements ICommandDispatcher {
         });
         setTimeout(() => {
             this.log(`CommandDispatcher: Emitting command: ${command.type}`);
-            this.eventEmitter.emit(command.type, command);
+            this.eventEmitter.emit(receiptId, command);
         }, 0);
         return this.stream;
     }
