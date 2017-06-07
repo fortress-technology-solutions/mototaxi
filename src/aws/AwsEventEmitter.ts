@@ -19,12 +19,10 @@ export class AwsEventEmitter implements IEventEmitter {
         });
     }
 
-    on(commandType: string, action: (command) => any) {
-        this.queue.pull(this.config.eventQueueName, (command, done) => {
-            if (command && command.type && command.type === commandType) {
-                this.log(`AwsEventEmitter: message received: ${command.type}`);
-                action(JSON.parse(command));
-            }
+    on(eventType: string, action: (domainEvent) => any) {
+        this.queue.pull(this.config.eventQueueName, (domainEvent, done) => {
+            this.log(`AwsEventEmitter: domain event received: ${JSON.stringify(domainEvent)}`);
+            action(domainEvent);
             done();
         });
     }
