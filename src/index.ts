@@ -1,4 +1,5 @@
-import { CommandDispatcher } from './CommandDispatcher';
+import { SynchronousCommandDispatcher } from './dispatchers/SynchronousCommandDispatcher';
+import { AsynchronousCommandDispatcher } from './dispatchers/AsynchronousCommandDispatcher';
 import { IMotoTaxiConfig } from './IMotoTaxiConfig';
 import { AwsEventEmitter } from './aws/AwsEventEmitter';
 import { IEventEmitter } from './IEventEmitter';
@@ -11,8 +12,9 @@ const getDispatcher = (args?: IMotoTaxiConfig) => {
     const logger = args.logger ? args.logger : undefined;
     if (args.sqs) {
         eventEmitter = new AwsEventEmitter(args.sqs, logger);
+        return new AsynchronousCommandDispatcher(eventEmitter, logger);
     }
-    return new CommandDispatcher(args.commandHandlers || [], eventEmitter, logger);
+    return new SynchronousCommandDispatcher(args.commandHandlers || [], logger);
 };
 
 export {
