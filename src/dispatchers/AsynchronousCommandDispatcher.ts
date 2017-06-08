@@ -3,6 +3,7 @@ import { ICommandDispatcher } from '../ICommandDispatcher';
 import { Observable } from 'rxjs/Observable';
 import { IEventEmitter } from '../IEventEmitter';
 import { ILogger } from '../ILogger';
+import { Subject } from 'rxjs/Subject';
 import * as Rx from 'rxjs';
 import 'rxjs/add/operator/throttle';
 
@@ -26,8 +27,13 @@ export class AsynchronousCommandDispatcher implements ICommandDispatcher {
             this.eventEmitter.emit(receiptId, command);
         }, 50);
 
+        const subject = new Subject();
         this.log(`CommandDispatcher: Listening for ${receiptId}...`);
-        return Rx.Observable.fromEvent((this.eventEmitter as any), receiptId);
+        this.eventEmitter.addListener(receiptId, (data: any) => {
+            this.log(`CommandDispatcher: Received data for ${receiptId}.`);
+            subject.next(data);
+        });
+        return subject;
     }
 
     private log(message): void {
