@@ -32,10 +32,10 @@ describe('Getting a Dispatcher', () => {
     describe('with sqs config', () => {
         const config: IMotoTaxiConfig = {
             sqs : {
-                eventQueueName: 'eventQueueName',
-                commandQueueName: 'commandQueueName',
+                outgoingQueueUrl: 'https://sqs.us-east-1.amazonaws.com/487799950234/nonexistent',
+                incomingQueueUrl: 'https://sqs.us-east-1.amazonaws.com/487799950234/nonexistent',
                 access: 'access',
-                region: 'region',
+                region: 'us-east-1',
                 secret: 'secret'
             }
         };

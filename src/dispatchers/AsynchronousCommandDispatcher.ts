@@ -4,8 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { IEventEmitter } from '../IEventEmitter';
 import { ILogger } from '../ILogger';
 import { Subject } from 'rxjs/Subject';
-import * as Rx from 'rxjs';
-import 'rxjs/add/operator/throttle';
+import * as uuid from 'uuid/v4';
 
 export class AsynchronousCommandDispatcher implements ICommandDispatcher {
 
@@ -13,14 +12,7 @@ export class AsynchronousCommandDispatcher implements ICommandDispatcher {
     }
 
     dispatch(command: ICommand): Observable<any> {
-        const receiptId = `${command.type}-${new Date().getTime()}`;
-
-        // Rx.Observable.interval(20)
-        //     .throttle(val => Rx.Observable.interval(20))
-        //     .first()
-        //     .subscribe(() => {
-        //         this.eventEmitter.emit(receiptId, command);
-        //     });
+        const receiptId = `${uuid()}-${command.type}`;
 
         setTimeout(() => {
             this.log(`CommandDispatcher: Emitting command: ${receiptId}`);
