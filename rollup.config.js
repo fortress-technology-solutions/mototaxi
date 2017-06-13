@@ -16,6 +16,7 @@ export default {
   format: 'umd',
   exports: 'named',
   sourceMap: true,
+  external: ['aws-sdk'],
   plugins: [
     sourcemaps(),
     nodeResolve(),

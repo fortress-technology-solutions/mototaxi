@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { IEventEmitter } from '../IEventEmitter';
 import { ILogger } from '../ILogger';
 import { Subject } from 'rxjs/Subject';
-import * as uuid from 'uuid/v4';
+import * as _uuid from 'uuid/v4';
 
 export class AsynchronousCommandDispatcher implements ICommandDispatcher {
 
@@ -12,6 +12,7 @@ export class AsynchronousCommandDispatcher implements ICommandDispatcher {
     }
 
     dispatch(command: ICommand): Observable<any> {
+        const uuid = _uuid;
         const receiptId = `${uuid()}-${command.type}`;
 
         setTimeout(() => {
