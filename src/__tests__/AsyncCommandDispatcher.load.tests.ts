@@ -32,6 +32,9 @@ describe('The Asynchronous Command Dispatcher Under Load', () => {
                 }, delay);
             }
         };
+        const console = {
+            log: () => {}
+        };
         const dispatcher = new AsynchronousCommandDispatcher(eventEmitter, console);
 
         describe('when subscribing to each dispatched observable', () => {

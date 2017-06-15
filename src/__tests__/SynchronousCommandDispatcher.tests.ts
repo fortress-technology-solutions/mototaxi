@@ -7,6 +7,9 @@ describe('The Synchronous Command Dispatcher', () => {
         const command = { type: 'test' };
         const domainEvent = { type: `tested` };
         const handler = { test: (command) => domainEvent };
+        const console = {
+            log: () => {}
+        };
         const dispatcher = new SynchronousCommandDispatcher([handler], console);
         const observable = dispatcher.dispatch(command);
 
