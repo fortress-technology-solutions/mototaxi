@@ -5,6 +5,7 @@ node_js:
 before_script:
 - npm install -g gulp
 script:
+- jest -v
 - npm test
 - npm build
 - gulp bump
