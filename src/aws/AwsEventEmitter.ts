@@ -15,7 +15,7 @@ export class AwsEventEmitter implements IEventEmitter {
     emit(transactionId: string, payload: any) {
         payload.transactionId = transactionId;
         const outgoingParams = {
-            QueueUrl: this.config.outgoingQueueUrl,
+            QueueUrl: this.config.eventQueueUrl,
             MessageBody: JSON.stringify(payload),
         };
         this.sqs.sendMessage(outgoingParams, (err, sendReceipt) => {
@@ -29,7 +29,7 @@ export class AwsEventEmitter implements IEventEmitter {
 
     addListener(transactionId: string, action: (domainEvent) => any) {
         const incomingParams = {
-            QueueUrl: this.config.incomingQueueUrl,
+            QueueUrl: this.config.commandQueueUrl,
             MaxNumberOfMessages: 1,
         };
 
@@ -60,7 +60,7 @@ export class AwsEventEmitter implements IEventEmitter {
 
     private removeFromCommandQueue(message: any) {
         this.sqs.deleteMessage({
-            QueueUrl: this.config.incomingQueueUrl,
+            QueueUrl: this.config.commandQueueUrl,
             ReceiptHandle: message.ReceiptHandle,
         }, (err, data) => {
             if (err) {
