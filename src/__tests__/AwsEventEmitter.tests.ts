@@ -78,7 +78,6 @@ describe('The AWS Event Emitter', () => {
             const command = { something: 'else'};
             eventEmitter.emit('anything', command);
             it('should log the error', () => {
-                console.log(logger.log.mock.calls[0][0])
                 expect(logger.log.mock.calls[0][0]).toBe(error);
             });
         });
