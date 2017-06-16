@@ -4,19 +4,21 @@ import { IEventEmitter } from '../IEventEmitter';
 import { ISqsConfig } from './ISqsConfig';
 import { ILogger } from '../ILogger';
 import * as AWS from 'aws-sdk';
+import * as Rx from 'rxjs';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
 
 export class AwsEventEmitter implements IEventEmitter {
-    private sqs: AWS.SQS;
-
-    constructor(private config: ISqsConfig, private logger?: ILogger) {
-        this.sqs = new AWS.SQS({region: config.region});
+    constructor(private sqs: AWS.SQS, private config: ISqsConfig, private logger?: ILogger) {
     }
 
     emit(transactionId: string, payload: any) {
-        payload.transactionId = transactionId;
         const outgoingParams = {
             QueueUrl: this.config.commandQueueUrl,
-            MessageBody: JSON.stringify(payload),
+            MessageBody: JSON.stringify({
+                transactionId,
+                payload,
+            }),
         };
         this.sqs.sendMessage(outgoingParams, (err, sendReceipt) => {
             if (err) {
@@ -33,24 +35,29 @@ export class AwsEventEmitter implements IEventEmitter {
             MaxNumberOfMessages: 1,
         };
 
-        this.sqs.receiveMessage(incomingParams, (err, data) => {
+        this.sqs.receiveMessage(incomingParams, (err, eventQueueData) => {
             if (err) {
                 this.log(err);
                 return;
             }
-
-            if (data.Messages && data.Messages.length > 0) {
-                const body  = JSON.parse(data.Messages[0].Body || '');
-                if (body.transactionId === transactionId) {
+            Rx.Observable.from(eventQueueData.Messages || [])
+                .map((message) => {
+                    return {
+                        receiptHandle: message.ReceiptHandle || '',
+                        transaction: JSON.parse(message.Body || ''),
+                    };
+                })
+                .filter((message) => message.transaction.transactionId === transactionId)
+                .subscribe((message) => {
                     this.log(`AwsEventEmitter: Data received from event queue: ${transactionId}`);
                     try {
-                        action(body);
-                        this.removeFromCommandQueue(data.Messages[0]);
+                        action(message.transaction.payload);
+                        this.removeFromEventQueue(message.receiptHandle);
                     } catch (err) {
                         this.log(`AwsEventEmitter: ERROR: ${err}`);
                     }
-                }
-            }
+                });
+
         });
     }
 
@@ -58,15 +65,15 @@ export class AwsEventEmitter implements IEventEmitter {
         return;
     }
 
-    private removeFromCommandQueue(message: any) {
+    private removeFromEventQueue(receiptHandle: string) {
         this.sqs.deleteMessage({
-            QueueUrl: this.config.commandQueueUrl,
-            ReceiptHandle: message.ReceiptHandle,
+            QueueUrl: this.config.eventQueueUrl,
+            ReceiptHandle: receiptHandle,
         }, (err, data) => {
             if (err) {
                 this.log(err);
             }
-            this.log(`Consumer: Removed command ${message.Body} from queue.`);
+            this.log(`Consumer: Removed command ${receiptHandle} from queue.`);
         });
     }
 

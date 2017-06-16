@@ -4,17 +4,19 @@ import { IMotoTaxiConfig } from './IMotoTaxiConfig';
 import { AwsEventEmitter } from './aws/AwsEventEmitter';
 import { IEventEmitter } from './IEventEmitter';
 import * as EventEmitter from 'events';
+import * as AWS from 'aws-sdk';
 import 'rxjs/Rx';
 
-const getDispatcher = (args?: IMotoTaxiConfig) => {
-    args = args || {};
+const getDispatcher = (config?: IMotoTaxiConfig) => {
+    config = config || {};
     let eventEmitter: IEventEmitter = new EventEmitter();
-    const logger = args.logger ? args.logger : undefined;
-    if (args.sqs) {
-        eventEmitter = new AwsEventEmitter(args.sqs, logger);
+    const logger = config.logger ? config.logger : undefined;
+    if (config.sqs) {
+        const sqs = new AWS.SQS({region: config.sqs.region});
+        eventEmitter = new AwsEventEmitter(sqs, config.sqs, logger);
         return new AsynchronousCommandDispatcher(eventEmitter, logger);
     }
-    return new SynchronousCommandDispatcher(args.commandHandlers || [], logger);
+    return new SynchronousCommandDispatcher(config.commandHandlers || [], logger);
 };
 
 export {
