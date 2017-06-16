@@ -15,7 +15,7 @@ export class AwsEventEmitter implements IEventEmitter {
     emit(transactionId: string, payload: any) {
         payload.transactionId = transactionId;
         const outgoingParams = {
-            QueueUrl: this.config.eventQueueUrl,
+            QueueUrl: this.config.commandQueueUrl,
             MessageBody: JSON.stringify(payload),
         };
         this.sqs.sendMessage(outgoingParams, (err, sendReceipt) => {
@@ -23,13 +23,13 @@ export class AwsEventEmitter implements IEventEmitter {
                 this.log(err);
                 return;
             }
-            this.log(`AwsEventEmitter: message sent to outgoing queue: ${transactionId}`);
+            this.log(`AwsEventEmitter: message sent to command queue: ${transactionId}`);
         });
     }
 
     addListener(transactionId: string, action: (domainEvent) => any) {
         const incomingParams = {
-            QueueUrl: this.config.commandQueueUrl,
+            QueueUrl: this.config.eventQueueUrl,
             MaxNumberOfMessages: 1,
         };
 
@@ -42,7 +42,7 @@ export class AwsEventEmitter implements IEventEmitter {
             if (data.Messages && data.Messages.length > 0) {
                 const body  = JSON.parse(data.Messages[0].Body || '');
                 if (body.transactionId === transactionId) {
-                    this.log(`AwsEventEmitter: Data received from incoming queue: ${transactionId}`);
+                    this.log(`AwsEventEmitter: Data received from event queue: ${transactionId}`);
                     try {
                         action(body);
                         this.removeFromCommandQueue(data.Messages[0]);
