@@ -3,7 +3,7 @@ sudo: false
 node_js:
 - stable
 before_script:
-- yarn add -g gulp
+- yarn add global gulp
 script:
 - jest -v
 - yarn run test
@@ -26,5 +26,5 @@ cache:
 notifications:
   slack: acklen:vUEWGNCb3ZnIbAt0JZJDYJuD
 after_success:
-- yarn add -g coveralls
+- yarn add global coveralls
 - cat coverage/lcov.info | coveralls
