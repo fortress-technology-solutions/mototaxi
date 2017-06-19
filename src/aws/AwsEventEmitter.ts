@@ -53,7 +53,9 @@ export class AwsEventEmitter implements IEventEmitter {
                             transaction: JSON.parse(message.Body || ''),
                         };
                     })
-                    .filter((message) => message.transaction.transactionId === transactionId)
+                    .filter((message) => {
+                        return message.transaction.transactionId === transactionId;
+                    })
                     .subscribe((message) => {
                         this.log(`AwsEventEmitter: Data received from event queue: ${transactionId}`);
                         try {
