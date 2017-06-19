@@ -9,6 +9,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 
 export class AwsEventEmitter implements IEventEmitter {
+    private listeners: any = {};
+
     constructor(private sqs: AWS.SQS, private config: ISqsConfig, private logger?: ILogger) {
     }
 
@@ -30,40 +32,47 @@ export class AwsEventEmitter implements IEventEmitter {
     }
 
     addListener(transactionId: string, action: (domainEvent) => any) {
-        const incomingParams = {
-            QueueUrl: this.config.eventQueueUrl,
-            MaxNumberOfMessages: 1,
-            WaitTimeSeconds: this.config.pollingSeconds || 5,
+        if (this.listeners[transactionId]) {
+            throw new Error(`Listener already started for ${transactionId}.`);
+        }
+        const execute = () => {
+            const incomingParams = {
+                QueueUrl: this.config.eventQueueUrl,
+                MaxNumberOfMessages: 1,
+            };
+
+            this.sqs.receiveMessage(incomingParams, (err, eventQueueData) => {
+                if (err) {
+                    this.log(err);
+                    return;
+                }
+                Rx.Observable.from(eventQueueData.Messages || [])
+                    .map((message) => {
+                        return {
+                            receiptHandle: message.ReceiptHandle || '',
+                            transaction: JSON.parse(message.Body || ''),
+                        };
+                    })
+                    .filter((message) => message.transaction.transactionId === transactionId)
+                    .subscribe((message) => {
+                        this.log(`AwsEventEmitter: Data received from event queue: ${transactionId}`);
+                        try {
+                            action(message.transaction.payload);
+                            this.removeFromEventQueue(message.receiptHandle);
+                        } catch (err) {
+                            this.log(`AwsEventEmitter: ERROR: ${err}`);
+                        }
+                    });
+            });
         };
-
-        this.sqs.receiveMessage(incomingParams, (err, eventQueueData) => {
-            if (err) {
-                this.log(err);
-                return;
-            }
-            Rx.Observable.from(eventQueueData.Messages || [])
-                .map((message) => {
-                    return {
-                        receiptHandle: message.ReceiptHandle || '',
-                        transaction: JSON.parse(message.Body || ''),
-                    };
-                })
-                .filter((message) => message.transaction.transactionId === transactionId)
-                .subscribe((message) => {
-                    this.log(`AwsEventEmitter: Data received from event queue: ${transactionId}`);
-                    try {
-                        action(message.transaction.payload);
-                        this.removeFromEventQueue(message.receiptHandle);
-                    } catch (err) {
-                        this.log(`AwsEventEmitter: ERROR: ${err}`);
-                    }
-                });
-
-        });
+        execute();
+        this.listeners[transactionId] = setInterval(() => {
+            execute();
+        }, this.config.pollingInterval || 5000);
     }
 
-    removeListener(type: string, listener: any) {
-        return;
+    removeListener(transactionId: string, listener: any) {
+        clearInterval(this.listeners[transactionId]);
     }
 
     private removeFromEventQueue(receiptHandle: string) {

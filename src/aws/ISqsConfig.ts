@@ -4,5 +4,5 @@ export interface ISqsConfig {
     region: string;
     commandQueueUrl: string;
     eventQueueUrl: string;
-    pollingSeconds?: number;
+    pollingInterval?: number;
 }
