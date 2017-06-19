@@ -13,17 +13,17 @@ export class AsynchronousCommandDispatcher implements ICommandDispatcher {
 
     dispatch(command: ICommand): Observable<any> {
         const uuid = _uuid;
-        const receiptId = `${uuid()}-${command.type}`;
+        const transactionId = `${uuid()}-${command.type}`;
 
         setTimeout(() => {
-            this.log(`CommandDispatcher: Emitting command: ${receiptId}`);
-            this.eventEmitter.emit(receiptId, command);
+            this.log(`CommandDispatcher: Emitting command: ${transactionId}`);
+            this.eventEmitter.emit(transactionId, command);
         }, 50);
 
         const subject = new Subject();
-        this.log(`CommandDispatcher: Listening for ${receiptId}...`);
-        this.eventEmitter.addListener(receiptId, (data: any) => {
-            this.log(`CommandDispatcher: Received data for ${receiptId}.`);
+        this.log(`CommandDispatcher: Listening for ${transactionId}...`);
+        this.eventEmitter.addListener(transactionId, (data: any) => {
+            this.log(`CommandDispatcher: Received data for ${transactionId}.`);
             subject.next(data);
         });
         return subject;

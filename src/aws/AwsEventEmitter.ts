@@ -33,6 +33,7 @@ export class AwsEventEmitter implements IEventEmitter {
         const incomingParams = {
             QueueUrl: this.config.eventQueueUrl,
             MaxNumberOfMessages: 1,
+            WaitTimeSeconds: this.config.pollingSeconds || 5,
         };
 
         this.sqs.receiveMessage(incomingParams, (err, eventQueueData) => {
