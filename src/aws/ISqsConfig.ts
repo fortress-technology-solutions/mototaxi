@@ -5,4 +5,5 @@ export interface ISqsConfig {
     commandQueueUrl: string;
     eventQueueUrl: string;
     pollingInterval?: number;
+    maxNumberOfMessages?: number;
 }

@@ -45,7 +45,7 @@ export class AwsEventEmitter implements IEventEmitter {
         const pollOnce = () => {
             const incomingParams = {
                 QueueUrl: this.config.eventQueueUrl,
-                MaxNumberOfMessages: 1,
+                MaxNumberOfMessages: this.config.maxNumberOfMessages || 1,
             };
 
             this.sqs.receiveMessage(incomingParams, (err, eventQueueData) => {
