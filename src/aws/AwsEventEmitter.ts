@@ -77,10 +77,14 @@ export class AwsEventEmitter implements IEventEmitter {
             .filter((message) => {
                 return message.transaction.transactionId;
             })
+            .filter((message) => {
+                return this.listeners[message.transaction.transactionId];
+            })
             .subscribe((message) => {
                 this.log(`AwsEventEmitter: Data received from event queue: ${message.transaction.transactionId}`);
                 try {
                     const action = this.listeners[message.transaction.transactionId];
+
                     action(message.transaction.payload);
                     this.removeFromEventQueue(message.receiptHandle);
                     delete this.listeners[message.transaction.transactionId];
