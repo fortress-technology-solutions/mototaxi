@@ -1,8 +1,8 @@
-import { ISqsConfig } from './aws/ISqsConfig';
-import { ILogger } from './ILogger';
+import { ISqsConfig } from "./aws/ISqsConfig";
 
 export interface IMotoTaxiConfig {
-    commandHandlers?: any[];
-    sqs?: ISqsConfig;
-    logger?: ILogger;
+  commandHandlers?: any[];
+  sqs?: ISqsConfig;
+  log?: (message) => void;
+  resolve?: (type) => any;
 }
