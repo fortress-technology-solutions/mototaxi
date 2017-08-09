@@ -25,7 +25,7 @@ const getDispatcher = (config?: IMotoTaxiConfig) => {
   return new SynchronousCommandDispatcher(
     config.commandHandlers || [],
     resolver,
-    logger
+    logger,
   );
 };
 

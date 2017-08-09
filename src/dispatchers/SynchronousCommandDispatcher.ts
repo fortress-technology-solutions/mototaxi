@@ -9,7 +9,7 @@ export class SynchronousCommandDispatcher implements ICommandDispatcher {
   constructor(
     private commandHandlers: any[],
     private resolver: IResolver,
-    private logger: ILogger
+    private logger: ILogger,
   ) {}
 
   dispatch(command: ICommand): Observable<any> {

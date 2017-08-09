@@ -15,7 +15,7 @@ export class AwsEventEmitter implements IEventEmitter {
   constructor(
     private sqs: AWS.SQS,
     private config: ISqsConfig,
-    private logger?: ILogger
+    private logger?: ILogger,
   ) {}
 
   emit(transactionId: string, payload: any) {
@@ -23,8 +23,8 @@ export class AwsEventEmitter implements IEventEmitter {
       QueueUrl: this.config.commandQueueUrl,
       MessageBody: JSON.stringify({
         transactionId,
-        payload
-      })
+        payload,
+      }),
     };
     this.sqs.sendMessage(outgoingParams, (err, sendReceipt) => {
       if (err) {
@@ -32,7 +32,7 @@ export class AwsEventEmitter implements IEventEmitter {
         return;
       }
       this.log(
-        `AwsEventEmitter: message sent to command queue: ${transactionId}`
+        `AwsEventEmitter: message sent to command queue: ${transactionId}`,
       );
     });
   }
@@ -50,7 +50,7 @@ export class AwsEventEmitter implements IEventEmitter {
     const pollOnce = () => {
       const incomingParams = {
         QueueUrl: this.config.eventQueueUrl,
-        MaxNumberOfMessages: this.config.maxNumberOfMessages || 1
+        MaxNumberOfMessages: this.config.maxNumberOfMessages || 1,
       };
 
       this.sqs.receiveMessage(incomingParams, (err, eventQueueData) => {
@@ -76,7 +76,7 @@ export class AwsEventEmitter implements IEventEmitter {
       .map(message => {
         return {
           receiptHandle: message.ReceiptHandle || '',
-          transaction: JSON.parse(message.Body || '')
+          transaction: JSON.parse(message.Body || ''),
         };
       })
       .filter(message => {
@@ -88,7 +88,7 @@ export class AwsEventEmitter implements IEventEmitter {
       .subscribe(message => {
         this.log(
           `AwsEventEmitter: Data received from event queue: ${message
-            .transaction.transactionId}`
+            .transaction.transactionId}`,
         );
         try {
           const action = this.listeners[message.transaction.transactionId];
@@ -106,14 +106,14 @@ export class AwsEventEmitter implements IEventEmitter {
     this.sqs.deleteMessage(
       {
         QueueUrl: this.config.eventQueueUrl,
-        ReceiptHandle: receiptHandle
+        ReceiptHandle: receiptHandle,
       },
       (err, data) => {
         if (err) {
           this.log(err);
         }
         this.log(`Consumer: Removed command ${receiptHandle} from queue.`);
-      }
+      },
     );
   }
 
