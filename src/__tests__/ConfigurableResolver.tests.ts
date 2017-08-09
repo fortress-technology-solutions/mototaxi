@@ -3,7 +3,7 @@ import { ConfigurableResolver } from '../ConfigurableResolver';
 describe('The Configurable Resolver', () => {
   describe('when resolving a type using the given resolve method', () => {
     const resolver = new ConfigurableResolver(type => new type());
-    const testType = function() {
+    const testType = () => {
       return { test: 123 };
     };
     const resolvedType = resolver.resolve(testType);
