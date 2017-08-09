@@ -1,9 +1,9 @@
-import { ICommand } from "../ICommand";
-import { ICommandDispatcher } from "../ICommandDispatcher";
-import { Observable } from "rxjs/Observable";
-import * as Rx from "rxjs";
-import { ILogger } from "../ILogger";
-import { IResolver } from "../IResolver";
+import { ICommand } from '../ICommand';
+import { ICommandDispatcher } from '../ICommandDispatcher';
+import { Observable } from 'rxjs/Observable';
+import * as Rx from 'rxjs';
+import { ILogger } from '../ILogger';
+import { IResolver } from '../IResolver';
 
 export class SynchronousCommandDispatcher implements ICommandDispatcher {
   constructor(

@@ -1,4 +1,4 @@
-import { IResolver } from "./IResolver";
+import { IResolver } from './IResolver';
 
 export class ConfigurableResolver implements IResolver {
   constructor(private resolveFunc: (type) => any) {}

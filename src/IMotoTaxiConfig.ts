@@ -1,4 +1,4 @@
-import { ISqsConfig } from "./aws/ISqsConfig";
+import { ISqsConfig } from './aws/ISqsConfig';
 
 export interface IMotoTaxiConfig {
   commandHandlers?: any[];

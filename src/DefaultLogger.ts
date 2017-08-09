@@ -1,4 +1,4 @@
-import { ILogger } from "./ILogger";
+import { ILogger } from './ILogger';
 
 export class DefaultLogger implements ILogger {
   log(message) {

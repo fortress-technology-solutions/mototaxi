@@ -1,13 +1,13 @@
-import { ConfigurableResolver } from "../ConfigurableResolver";
+import { ConfigurableResolver } from '../ConfigurableResolver';
 
-describe("The Configurable Resolver", () => {
-  describe("when resolving a type using the given resolve method", () => {
+describe('The Configurable Resolver', () => {
+  describe('when resolving a type using the given resolve method', () => {
     const resolver = new ConfigurableResolver(type => new type());
     const testType = function() {
       return { test: 123 };
     };
     const resolvedType = resolver.resolve(testType);
-    it("should return the resolved type", () => {
+    it('should return the resolved type', () => {
       expect(resolvedType.test).toBe(123);
     });
   });

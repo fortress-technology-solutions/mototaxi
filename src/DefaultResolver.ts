@@ -1,4 +1,4 @@
-import { IResolver } from "./IResolver";
+import { IResolver } from './IResolver';
 
 export class DefaultResolver implements IResolver {
   resolve(handlerType) {

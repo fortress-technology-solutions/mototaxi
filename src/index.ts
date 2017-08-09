@@ -1,14 +1,14 @@
-import { SynchronousCommandDispatcher } from "./dispatchers/SynchronousCommandDispatcher";
-import { AsynchronousCommandDispatcher } from "./dispatchers/AsynchronousCommandDispatcher";
-import { IMotoTaxiConfig } from "./IMotoTaxiConfig";
-import { AwsEventEmitter } from "./aws/AwsEventEmitter";
-import { IEventEmitter } from "./IEventEmitter";
-import { DefaultResolver } from "./DefaultResolver";
-import { ConfigurableResolver } from "./ConfigurableResolver";
-import { DefaultLogger } from "./DefaultLogger";
-import * as EventEmitter from "events";
-import * as AWS from "aws-sdk";
-import "rxjs/Rx";
+import { SynchronousCommandDispatcher } from './dispatchers/SynchronousCommandDispatcher';
+import { AsynchronousCommandDispatcher } from './dispatchers/AsynchronousCommandDispatcher';
+import { IMotoTaxiConfig } from './IMotoTaxiConfig';
+import { AwsEventEmitter } from './aws/AwsEventEmitter';
+import { IEventEmitter } from './IEventEmitter';
+import { DefaultResolver } from './DefaultResolver';
+import { ConfigurableResolver } from './ConfigurableResolver';
+import { DefaultLogger } from './DefaultLogger';
+import * as EventEmitter from 'events';
+import * as AWS from 'aws-sdk';
+import 'rxjs/Rx';
 
 const getDispatcher = (config?: IMotoTaxiConfig) => {
   config = config || {};
