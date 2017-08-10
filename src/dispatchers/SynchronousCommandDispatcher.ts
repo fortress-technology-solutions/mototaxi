@@ -58,6 +58,7 @@ export class SynchronousCommandDispatcher implements ICommandDispatcher {
       .map(handler => {
         return this.resolver.resolve(handler);
       })
+ 
       .flatMap(resolvedHandler => {
         const proto = Object.getPrototypeOf(resolvedHandler);
         const propNames = Object.getOwnPropertyNames(proto);
