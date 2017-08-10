@@ -67,28 +67,23 @@ export class SynchronousCommandDispatcher implements ICommandDispatcher {
         const allFuncs = everythingOnThePrototype
           .filter(prop => typeof resolvedHandler[prop] === 'function')
           .filter(func => {
-            console.log(func);
             const foundIntheList =
               this.ignoredPrototypeFunctions.indexOf(func) > -1;
-            console.log(foundIntheList);
             return !foundIntheList;
           });
-        console.log(allFuncs);
         const functions = allFuncs.map(k => ({
           type: k,
           func: resolvedHandler[k],
+          origin: resolvedHandler,
         }));
         return Rx.Observable.from(functions);
       })
       .filter(handler => {
-        console.log(handler);
         return handler.type === command.type;
       })
-      .map((handler, arg) => {
+      .map(handler => {
         this.logger.log(`SyncCommandDispatcher: Handling ${command.type}...`);
-        console.log(handler);
-        const result = handler.func(command);
-        console.log(result);
+        const result = handler.func.bind(handler.origin)(command);
         return result;
       });
   }

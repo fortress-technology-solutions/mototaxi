@@ -106,8 +106,69 @@ describe('The Synchronous Command Dispatcher', () => {
         it('should return the domain event when subscribing', done => {
           expect(observable).not.toBeUndefined();
           observable.subscribe(e => {
-            console.log(e);
             expect(e).toBe(domainEvent);
+            done();
+          });
+        });
+      });
+    });
+
+    describe('with a resolver that instantiates with dependencies', () => {
+      describe('with a class of handlers', () => {
+        const resolver = {
+          resolve: testHandler => new testHandler(123),
+        };
+        class handlers {
+          constructor(private num) {
+            this.num = num;
+          }
+          test(cmd) {
+            return this.num;
+          }
+        }
+        describe('with a single handler', () => {
+          const command = { type: 'test' };
+          const dispatcher = new SynchronousCommandDispatcher(
+            [handlers],
+            resolver,
+            console,
+          );
+          const observable = dispatcher.dispatch(command);
+
+          it('should return the number from the ctor to show that it does not lose its scope', done => {
+            expect(observable).not.toBeUndefined();
+            observable.subscribe(e => {
+              expect(e).toBe(123);
+              done();
+            });
+          });
+        });
+      });
+
+      describe('with a function of handlers', () => {
+        const command = { type: 'test6' };
+        const resolver = {
+          resolve: testHandler => new testHandler(1234),
+        };
+        function handlers3(num) {
+          return {
+            test5: cmd => {},
+            test6: cmd => {
+              return num;
+            },
+          };
+        }
+        const dispatcher = new SynchronousCommandDispatcher(
+          [handlers3],
+          resolver,
+          console,
+        );
+        const observable = dispatcher.dispatch(command);
+
+        it('should return the domain event when subscribing', done => {
+          expect(observable).not.toBeUndefined();
+          observable.subscribe(e => {
+            expect(e).toBe(1234);
             done();
           });
         });
