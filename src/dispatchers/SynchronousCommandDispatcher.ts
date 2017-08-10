@@ -53,12 +53,12 @@ export class SynchronousCommandDispatcher implements ICommandDispatcher {
   ];
 
   dispatch(command: ICommand): Observable<any> {
+    const __this = this;
     return Rx.Observable
       .from(this.commandHandlers)
       .map(handler => {
-        return this.resolver.resolve(handler);
+        return __this.resolver.resolve(handler);
       })
- 
       .flatMap(resolvedHandler => {
         const proto = Object.getPrototypeOf(resolvedHandler);
         const propNames = Object.getOwnPropertyNames(proto);
