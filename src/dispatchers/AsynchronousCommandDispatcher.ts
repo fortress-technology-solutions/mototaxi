@@ -24,6 +24,7 @@ export class AsynchronousCommandDispatcher implements ICommandDispatcher {
       this.log(`CommandDispatcher: Received data for ${transactionId}.`);
       subject.next(data);
     });
+    // @ts-ignore
     return subject;
   }
 
