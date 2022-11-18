@@ -1,6 +1,6 @@
 {
   "name": "@fortress-technology-solutions/mototaxi",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A support library for commands and handlers in existing or 'could be' CQRS systems.",
   "author": "Byron Sommardahl <byron@acklenavenue.com>",
   "license": "MIT",
@@ -24,8 +24,7 @@
     "postbuild": "rimraf {lib,es}/**/__tests__",
     "posttest": "npm run typecheck && npm run lint",
     "preversion": "npm test",
-    "postversion": "git push && git push --tags",
-    "publish": "npm publish"
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "typescript",
