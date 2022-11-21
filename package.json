@@ -1,6 +1,6 @@
 {
   "name": "@fortress-technology-solutions/mototaxi",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A support library for commands and handlers in existing or 'could be' CQRS systems.",
   "author": "Byron Sommardahl <byron@acklenavenue.com>",
   "license": "MIT",
@@ -42,7 +42,6 @@
     "aws-sdk": "^2.66.0",
     "fs.realpath": "^1.0.0",
     "rxjs": "^5.4.0",
-    "sqs": "^2.0.0",
     "tslib": "^2.4.1",
     "uuid": "^3.0.1"
   },
